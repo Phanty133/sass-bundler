@@ -1,2 +1,2 @@
-# scss-bundleify
-A Browserify plugin to compile and bundle SCSS
+# scss-bundler
+An npm package for bundling page-specific SCSS/SASS
