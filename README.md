@@ -1,7 +1,11 @@
 # sass-bundler
 A quick and dirty npm package for bundling page-specific SASS/SCSS.
 
+## Installation
+`npm install --save-dev @phanty/sass-bundler`
+
 ## Usage
+
 `@import` and `@use` statements in SASS must be preceeded by `!bundler`, e.g. `@use "!bundler/_partial.scss"`.
 
 For the bundler to recognize partials, their filename must be preceeded by `_`.
@@ -33,7 +37,7 @@ Outputs partials used by all SASS files to a single file.
 `_partial1.scss`
 ```
 span{
-	font-weight: bold;
+  font-weight: bold;
 }
 ```
 
