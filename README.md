@@ -1,6 +1,65 @@
 # sass-bundler
 A quick and dirty npm package for bundling page-specific SASS/SCSS.
 
+## Usage
+`@import` and `@use` statements in SASS must be preceeded by `!bundler`, e.g. `@use "!bundler/_partial.scss"`.
+
+For the bundler to recognize partials, their filename must be preceeded by `_`.
+
+Outputs partials used by all SASS files to a single file.
+
+### Example
+
+#### Input
+
+`a.scss`
+```
+@use "!bundler/_partial1.scss"
+
+#a{
+  color: red;
+}
+```
+
+`b.scss`
+```
+@use "!bundler/_partial1.scss"
+
+#b{
+  color: green;
+}
+```
+
+`_partial1.scss`
+```
+span{
+	font-weight: bold;
+}
+```
+
+#### Compiles to
+
+`a.css`
+```
+#a{
+  color: red;
+}
+```
+
+`b.css`
+```
+#b{
+  color: green;
+}
+```
+
+`shared.css`
+```
+span{
+  font-weight: bold;
+}
+```
+
 ## CLI
 
 ### `sass-bundler [command] [options]` 

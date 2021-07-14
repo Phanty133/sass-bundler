@@ -1,10 +1,10 @@
 // Default sass-bundler configuration
 
 const config = {
-	scssDir: "./scss",
+	sassDir: "./scss",
 	outDir: "./build",
 	verbose: false,
-	commonPath: "./build/common.css",
+	sharedPath: "./build/common.css",
 };
 
 module.exports = config;

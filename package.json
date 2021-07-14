@@ -1,9 +1,9 @@
 {
-  "name": "sass-bundler",
+  "name": "@phanty/sass-bundler",
   "version": "1.0.0",
   "description": "A package for bundling page-specific SASS/SCSS",
   "main": "./build/index.js",
-  "types": "WIP.d.ts",
+  "types": "./build/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",

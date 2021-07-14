@@ -100,6 +100,12 @@ export default class Bundler {
 	compileDir(dirPath: string): CompiledFile[] {
 		const output: CompiledFile[] = [];
 
+		if (!fse.existsSync(dirPath)) {
+			console.error(`Error: SASS/SCSS directory ${dirPath} not found!`);
+			this.compilationError = true;
+			return [];
+		}
+
 		for (const file of fse.readdirSync(dirPath)) {
 			if (file.startsWith("_")) continue; // Don't compile partials
 
