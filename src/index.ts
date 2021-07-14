@@ -4,12 +4,20 @@ import path from "path";
 import { Readable, Writable } from "stream";
 import chokidar from "chokidar";
 import { performance } from "perf_hooks";
+import defaultConfig from "./sass-bundler.config.js";
 
-interface Config{
+export interface Config{
+	verbose?: boolean;
+	sassDir?: string;
+	outDir?: string;
+	sharedPath?: string;
+}
+
+interface _Config{
 	verbose: boolean;
-	scssDir: string;
+	sassDir: string;
 	outDir: string;
-	commonPath: string;
+	sharedPath: string;
 }
 
 interface CompiledFile{
@@ -26,7 +34,7 @@ let errorDetectedThisCycle = false;
  * Handles all the processing for scss-bundler.
  */
 export default class Bundler {
-	config: Config;
+	config: _Config;
 	compiledFiles: CompiledFile[] | null = null;
 	commonImports: string[] | null = null;
 	compilationError: boolean = false;
@@ -35,8 +43,8 @@ export default class Bundler {
 	 *
 	 * @param {string} config scss-bundler configuration
 	 */
-	constructor(config: Config) {
-		this.config = config;
+	constructor(config?: Config) {
+		this.config = Object.assign(defaultConfig, config);
 	}
 
 	/**
@@ -75,7 +83,7 @@ export default class Bundler {
 			return output;
 		}
 
-		const relativeCssPath = relativePath(filePath, this.config.scssDir).replace(/\.s[ca]ss$/, ".css");
+		const relativeCssPath = relativePath(filePath, this.config.sassDir).replace(/\.s[ca]ss$/, ".css");
 		const absoluteCssPath = path.join(this.config.outDir, relativeCssPath);
 
 		output.readStream = Readable.from(result.css);
@@ -200,7 +208,7 @@ export default class Bundler {
 	 * @param {string[]} commonImports Array of common imports
 	 */
 	async writeCommon(commonImports: string[]): Promise<void> {
-		const writeStream = fse.createWriteStream(this.config.commonPath);
+		const writeStream = fse.createWriteStream(this.config.sharedPath);
 
 		for (const commonImport of commonImports) {
 			let result: sass.Result;
@@ -209,7 +217,7 @@ export default class Bundler {
 				result = sass.renderSync({
 					file: commonImport,
 				});
-			} catch (err) {
+			} catch (err: any) {
 				console.error(err.formatted);
 
 				this.compilationError = true;
@@ -226,7 +234,7 @@ export default class Bundler {
 		writeStream.end();
 
 		if (this.config.verbose) {
-			console.log(path.basename(this.config.commonPath));
+			console.log(path.basename(this.config.sharedPath));
 		}
 	}
 
@@ -241,7 +249,7 @@ export default class Bundler {
 		console.log("Bundling SCSS...");
 
 		this.cleanDist();
-		const files = this.compileDir(this.config.scssDir);
+		const files = this.compileDir(this.config.sassDir);
 
 		if (this.compilationError) { // If this.compileDir set the error flag to true
 			return;
@@ -269,7 +277,7 @@ export default class Bundler {
 	 * @return {Promise<void>} Resolves after the first compilation
 	 */
 	watch(): Promise<void> {
-		const watcher = chokidar.watch(this.config.scssDir);
+		const watcher = chokidar.watch(this.config.sassDir);
 
 		return new Promise<void>((res, rej) => {
 			watcher.on("ready", async () => {
@@ -503,7 +511,7 @@ export default class Bundler {
 	private sassImporter(fileOutput: CompiledFile): (url: string) => void {
 		return (url: string) => {
 			if (url.startsWith("!bundler")) {
-				fileOutput.imports.push(path.resolve(this.config.scssDir, url.replace("!bundler", ".")));
+				fileOutput.imports.push(path.resolve(this.config.sassDir, url.replace("!bundler", ".")));
 
 				return { contents: "" };
 			} else {

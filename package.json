@@ -1,8 +1,8 @@
 {
-  "name": "scss-bundler",
+  "name": "sass-bundler",
   "version": "1.0.0",
-  "description": "A package for bundling page-specific SCSS/SASS",
-  "main": "dist/index.js",
+  "description": "A package for bundling page-specific SASS/SCSS",
+  "main": "./build/index.js",
   "types": "WIP.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Phanty133/scss-bundler.git"
+    "url": "git+https://github.com/Phanty133/sass-bundler.git"
   },
   "keywords": [
     "scss",
@@ -21,15 +21,16 @@
   "author": "phanty",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Phanty133/scss-bundler/issues"
+    "url": "https://github.com/Phanty133/sass-bundler/issues"
   },
-  "homepage": "https://github.com/Phanty133/scss-bundler#readme",
+  "homepage": "https://github.com/Phanty133/sass-bundler#readme",
   "bin": {
-    "sass-bundler": "./src/cli.ts"
+    "sass-bundler": "./build/cli.js"
   },
   "dependencies": {
     "chokidar": "^3.5.2",
     "fs-extra": "^10.0.0",
+    "pkg-up": "^3.1.0",
     "sass": "^1.35.2"
   },
   "devDependencies": {

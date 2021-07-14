@@ -1,0 +1,14 @@
+{
+  "name": "sass-bundler-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scss:build": "sass-bundler build",
+    "scss:watch": "sass-bundler watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}
