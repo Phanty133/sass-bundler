@@ -7,4 +7,4 @@ const bundler = new Bundler({
 	commonPath: "./dist/common.css",
 });
 
-bundler.build();
+bundler.watch();

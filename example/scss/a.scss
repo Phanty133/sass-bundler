@@ -1,5 +1,7 @@
 @use "!bundler/_partial1.scss";
+@use "!bundler/_partial2.scss";
 
 #a{
-	color: red;
+	color: blue;
+	background-color: red;
 }

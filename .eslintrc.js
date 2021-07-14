@@ -15,9 +15,10 @@ module.exports = {
 		"@typescript-eslint",
 	],
 	"rules": {
-		"indent": ["error", "tab"],
+		"indent": ["error", "tab", { "SwitchCase": 1 }],
 		"quotes": ["error", "double"],
 		"no-tabs": ["error", { "allowIndentationTabs": true }],
 		"object-curly-spacing": ["error", "always"],
+		"max-len": ["error", { "code": 120 }],
 	},
 };
