@@ -29,6 +29,8 @@ interface CompiledFile{
 }
 
 let errorDetectedThisCycle = false;
+let commonBeingWritten = false;
+let commonRewriteInQueue = false;
 
 /**
  * Handles all the processing for scss-bundler.
@@ -216,6 +218,21 @@ export default class Bundler {
 	async writeCommon(commonImports: string[]): Promise<void> {
 		const writeStream = fse.createWriteStream(this.config.sharedPath);
 
+		// If the shared file is already being written, put the next write in queue to not risk a race condition
+		if (commonBeingWritten) {
+			commonRewriteInQueue = true;
+			return;
+		}
+
+		commonBeingWritten = true;
+
+		// Delay reading the files due to a possible race condition after file change event
+		await new Promise<void>((res, rej) => {
+			setTimeout(() => {
+				res();
+			}, 10);
+		});
+
 		for (const commonImport of commonImports) {
 			let result: sass.Result;
 
@@ -241,6 +258,13 @@ export default class Bundler {
 
 		if (this.config.verbose) {
 			console.log(path.basename(this.config.sharedPath));
+		}
+
+		commonBeingWritten = false;
+
+		if (commonRewriteInQueue) {
+			commonRewriteInQueue = false;
+			this.writeCommon(commonImports);
 		}
 	}
 
@@ -342,12 +366,16 @@ export default class Bundler {
 		}
 
 		if (path.basename(filePath).startsWith("_")) {
-			if (this.commonImports.includes(filePath)) {
+			const importPath = path.resolve(filePath);
+
+			if (this.commonImports.includes(importPath)) {
 				await this.writeCommon(this.commonImports);
 
-				console.log("Modified file was an in use shared partial. Shared file rebuilt (${})");
+				console.log(`Modified file was an in use shared partial. Shared file rebuilt (${timeSince(t0)}ms)`);
+
+				return;
 			} else {
-				const affectedFiles = this.compiledFiles.filter((f) => f.imports.includes(filePath));
+				const affectedFiles = this.compiledFiles.filter((f) => f.imports.includes(importPath));
 
 				await this.bundle(affectedFiles, this.commonImports);
 

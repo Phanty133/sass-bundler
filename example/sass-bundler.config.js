@@ -4,7 +4,7 @@ const config = {
 	sassDir: "./scss",
 	outDir: "./build",
 	verbose: false,
-	sharedPath: "./build/common.css",
+	sharedPath: "./build/shared.css",
 };
 
 module.exports = config;

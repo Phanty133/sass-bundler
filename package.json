@@ -1,6 +1,6 @@
 {
   "name": "@phanty/sass-bundler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A package for bundling page-specific SASS/SCSS",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
